@@ -24,18 +24,18 @@
         <p>Featur v.03.10.2023</p>
         <ul>
             <li>
-                <a href="http://myapigateway.test/api/login">/login</a>
+                <a href="{{ route('login') }}">/login</a>
             </li>
             <li>
-                <a href="http://myapigateway.test/api/register">/register</a>
+                <a href="{{ route('register') }}">/register</a>
 
             </li>
             <li>
-                <a href="http://myapigateway.test/api/blogs">/blogs</a>
+                <a href="{{ route('blogs.index') }}">/blogs</a>
 
             </li>
             <li>
-                <a href="http://myapigateway.test/api/logout">/logout</a>
+                <a href="{{ route('logout') }}">/logout</a>
 
             </li>
         </ul>

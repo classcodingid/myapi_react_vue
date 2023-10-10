@@ -1,0 +1,53 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Dokumentasi API",
+        "description": "myapigateway",
+        "contact": {
+            "email": "saefulmujab008@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://myapigateway.test/api/v1",
+            "description": "Demo API Server"
+        }
+    ],
+    "paths": {
+        "/blogs": {
+            "get": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Data Blog",
+                "description": "Mengambil Data Blog",
+                "operationId": "DataBlog",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "success": true,
+                                    "message": "Berhasil mengambil Data Blog",
+                                    "data": [
+                                        {
+                                            "id": "1",
+                                            "title": "Title"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

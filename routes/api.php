@@ -18,8 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/login', App\Http\Controllers\Api\LoginController::class)->name('login');
-
-Route::post('/register', App\Http\Controllers\Api\RegisterController::class)->name('register');
-Route::apiResource('/blogs', App\Http\Controllers\Api\BlogController::class);
-Route::post('/logout', App\Http\Controllers\Api\LogoutController::class)->name('logout');
+Route::prefix('v1')->group(function () {
+    Route::post('/login', App\Http\Controllers\Api\LoginController::class)->name('login');
+    Route::post('/register', App\Http\Controllers\Api\RegisterController::class)->name('register');
+    Route::apiResource('/blogs', App\Http\Controllers\Api\BlogController::class, ['name' => 'blogs']);
+    Route::post('/logout', App\Http\Controllers\Api\LogoutController::class)->name('logout');
+});

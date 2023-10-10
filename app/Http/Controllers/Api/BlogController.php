@@ -16,6 +16,30 @@ class BlogController extends Controller
         $this->middleware('auth:api');
     }
 
+    /**
+     *    @OA\Get(
+     *       path="/blogs",
+     *       tags={"Blog"},
+     *       operationId="DataBlog",
+     *       summary="Data Blog",
+     *       description="Mengambil Data Blog",
+     *       @OA\Response(
+     *           response="200",
+     *           description="Ok",
+     *           @OA\JsonContent
+     *           (example={
+     *               "success": true,
+     *               "message": "Berhasil mengambil Data Blog",
+     *               "data": {
+     *                   {
+     *                   "id": "1",
+     *                   "title": "Title",
+     *                  }
+     *              }
+     *          }),
+     *      ),
+     *  )
+     */
     public function index()
     {
         //get all posts
