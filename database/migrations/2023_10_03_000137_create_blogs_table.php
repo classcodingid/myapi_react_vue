@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('image');
             $table->string('title');
             $table->text('content');
-            // $table->bigInteger('category_id');
+            $table->string('slug');
+            $table->bigInteger('category_id'); //relasi ke tabel category
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

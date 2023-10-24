@@ -8,13 +8,14 @@ use App\Models\Blog;
 use App\Http\Resources\BlogResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Image;
 
 class BlogController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api');
+    // }
 
     /**
      *    @OA\Get(
@@ -63,13 +64,32 @@ class BlogController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        //upload image
+        //upload file ke do_spaces
+        //========================
+        //sumber file dari form
         $image = $request->file('image');
-        $image->storeAs('public/blogs', $image->hashName());
+        //kompres image
+        $img = Image::make($image);
+        $img->fit(500, null, null, 'top');
+        //file nama yang sudah di enkripsi hash
+        $file = pathinfo($image->hashName(), PATHINFO_FILENAME);
+        //dapatkan ektensi file
+        $ext = $request->file('image')->getClientOriginalExtension();
+        //namafile untuk store database
+        $filestore = $file . '_' . time() . '.' . $ext;
+        //path di storage
+        $path = 'public/myapigateway/blog/';
+        //upload image ke storage s3
+        Storage::disk('do_spaces')->put($path . $filestore, $img->stream(), 'public');
+        //========================
+
+        //upload image
+        // $image = $request->file('image');
+        // $image->storeAs('public/blogs', $image->hashName());
 
         //create post
         $blog = Blog::create([
-            'image'     => $image->hashName(),
+            'image'     => $filestore,
             'title'     => $request->title,
             'content'   => $request->content,
         ]);
@@ -101,21 +121,35 @@ class BlogController extends Controller
         }
 
         //find post by ID
-        $blog = Blog::find($id);
+        $blog = Blog::findOrFail($id);
 
-        //check if image is not empty
+        //cek keberadaan image
         if ($request->hasFile('image')) {
-
-            //upload image
+            //upload file ke do_spaces
+            //========================
+            //sumber file dari form
             $image = $request->file('image');
-            $image->storeAs('public/blogs', $image->hashName());
-
-            //delete old image
-            Storage::delete('public/blogs/' . basename($blog->image));
+            //kompres image
+            $img = Image::make($image);
+            $img->fit(500, null, null, 'top');
+            //file nama yang sudah di enkripsi hash
+            $file = pathinfo($image->hashName(), PATHINFO_FILENAME);
+            //dapatkan ektensi file
+            $ext = $request->file('image')->getClientOriginalExtension();
+            //namafile untuk store database
+            $filestore = $file . '_' . time() . '.' . $ext;
+            //path di storage
+            $path = 'public/myapigateway/blog/';
+            //delete image lama
+            //kuncinya di parse_url
+            Storage::disk('do_spaces')->delete(parse_url($path . basename($blog->image)));
+            //upload image baru ke storage s3
+            Storage::disk('do_spaces')->put($path . $filestore, $img->stream(), 'public');
+            //========================
 
             //update post with new image
             $blog->update([
-                'image'     => $image->hashName(),
+                'image'     => $filestore,
                 'title'     => $request->title,
                 'content'   => $request->content,
             ]);
@@ -136,10 +170,14 @@ class BlogController extends Controller
     {
 
         //find blog by ID
-        $blog = Blog::find($id);
+        $blog = Blog::findOrFail($id);
 
+        //========================
         //delete image
-        Storage::delete('public/blogs/' . basename($blog->image));
+        $path = 'public/myapigateway/blog/';
+        //kuncinya di parse_url
+        Storage::disk('do_spaces')->delete(parse_url($path . basename($blog->image)));
+        //========================
 
         //delete blog
         $blog->delete();

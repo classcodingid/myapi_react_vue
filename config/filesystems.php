@@ -13,7 +13,9 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DISK', 'local'),
+    // 'default' => env('FILESYSTEM_DISK', 'local'),
+    'default' => env('FILESYSTEM_DISK', 'do_spaces'),
+    'cloud' => env('FILESYSTEM_CLOUD', 'do_spaces'),
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +41,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
@@ -54,6 +56,18 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
+        ],
+
+        //minio
+        'do_spaces' => [
+            'driver' => 's3',
+            'key' => env('MINIO_KEY', 'eWYSsm6V0uitDeFx'),
+            'secret' => env('MINIO_SECRET', 'rLeh54kLTfGtLoPtgJsO0iUMUptySgQ1'),
+            'region' => env('MINIO_DEFAULT_REGION', 'us-east-1'),
+            'bucket' => env('MINIO_BUCKET', 'sikocloud'),
+            'endpoint' => env('MINIO_ENDPOINT', 'https://nos.nurulfikri.id'),
+            'use_path_style_endpoint' => env('MINIO_USE_PATH_STYLE_ENDPOINT', true),
+            'bucket_endpoint' => env('MINIO_BUCKET_ENDPOINT', false),
         ],
 
     ],
